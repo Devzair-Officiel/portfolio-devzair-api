@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.config import settings
+from app.routers import projects
 
 app = FastAPI(
     title=settings.app_name,
@@ -17,6 +18,9 @@ app.add_middleware(
     allow_methods=["GET", "POST", "PUT", "DELETE", "PATCH"],
     allow_headers=["*"],
 )
+
+API_PREFIX = "/api/v1"
+app.include_router(projects.router, prefix=API_PREFIX)
 
 
 @app.get("/health", tags=["health"])
