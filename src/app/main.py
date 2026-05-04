@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.config import settings
 from app.routers import auth, projects
+from app.routers import settings as settings_router
 
 app = FastAPI(
     title=settings.app_name,
@@ -22,6 +23,7 @@ app.add_middleware(
 API_PREFIX = "/api/v1"
 app.include_router(auth.router, prefix=API_PREFIX)
 app.include_router(projects.router, prefix=API_PREFIX)
+app.include_router(settings_router.router, prefix=API_PREFIX)
 
 
 @app.get("/health", tags=["health"])
