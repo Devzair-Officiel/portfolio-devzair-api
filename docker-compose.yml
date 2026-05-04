@@ -1,0 +1,61 @@
+services:
+
+  # 🐍 L'API Python
+  api:
+    build: .
+    container_name: devzair-api
+    ports:
+      - "8000:8000"           # Port local:Port conteneur
+    volumes:
+      - ./src:/app/src         # Hot reload : les changements de code sont immédiats
+    env_file:
+      - .env                   # Variables d'environnement depuis le fichier .env
+    depends_on:
+      db:
+        condition: service_healthy  # Attend que la DB soit prête avant de démarrer
+    networks:
+      - devzair-network
+
+  # 🐘 La base de données PostgreSQL
+  db:
+    image: postgres:16-alpine   # Version légère de Postgres
+    container_name: devzair-db
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - "5432:5432"             # Accessible en local pour les outils DB (DBeaver, etc.)
+    volumes:
+      - postgres_data:/var/lib/postgresql/data  # Les données persistent entre les redémarrages
+    healthcheck:
+      # Vérifie que Postgres est prêt à accepter des connexions
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - devzair-network
+
+  # 🖥️ Interface graphique pour la base de données (optionnel mais pratique)
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: devzair-pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD}
+    ports:
+      - "5050:80"               # Interface web accessible sur http://localhost:5050
+    depends_on:
+      - db
+    networks:
+      - devzair-network
+
+# Volumes nommés : Docker gère le stockage (données persistent entre `docker compose down`)
+volumes:
+  postgres_data:
+
+# Réseau interne : les conteneurs se parlent par leur nom de service (ex: "db")
+networks:
+  devzair-network:
+    driver: bridge

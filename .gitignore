@@ -1,0 +1,30 @@
+# Variables d'environnement (JAMAIS dans Git)
+.env
+.env.local
+.env.*.local
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+dist/
+build/
+.venv/
+venv/
+
+# uv
+.uv/
+uv.lock       # À débattre : certains équipes le committent pour reproduire l'env exact
+
+# Tests
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Mypy
+.mypy_cache/
+
+# IDE
+.vscode/
+.idea/
