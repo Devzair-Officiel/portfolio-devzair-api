@@ -20,6 +20,10 @@ class Settings(BaseSettings):
     algorithm: str = "HS256"
     access_token_expire_minutes: int = 30
 
+    # Admin
+    admin_username: str = "admin"
+    admin_password_hash: str
+
     # CORS
     allowed_origins: list[str] = ["http://localhost:5173"]
 
