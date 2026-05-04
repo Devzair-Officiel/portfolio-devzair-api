@@ -8,6 +8,7 @@ services:
       - "8000:8000"           # Port local:Port conteneur
     volumes:
       - ./src:/app/src         # Hot reload : les changements de code sont immédiats
+      - ./alembic.ini:/app/alembic.ini
     env_file:
       - .env                   # Variables d'environnement depuis le fichier .env
     depends_on:
