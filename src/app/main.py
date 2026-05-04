@@ -5,6 +5,7 @@ from app.core.config import settings
 from app.routers import auth, projects
 from app.routers import settings as settings_router
 from app.routers import skills as skills_router
+from app.routers import categories as categories_router
 
 app = FastAPI(
     title=settings.app_name,
@@ -26,6 +27,7 @@ app.include_router(auth.router, prefix=API_PREFIX)
 app.include_router(projects.router, prefix=API_PREFIX)
 app.include_router(settings_router.router, prefix=API_PREFIX)
 app.include_router(skills_router.router, prefix=API_PREFIX)
+app.include_router(categories_router.router, prefix=API_PREFIX)
 
 
 @app.get("/health", tags=["health"])

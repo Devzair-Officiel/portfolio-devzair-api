@@ -16,6 +16,9 @@ class SkillService:
         skill = await self.repository.create(data.name, data.category)
         return SkillResponse.model_validate(skill)
 
+    async def reorder(self, ordered_ids: list[int]) -> None:
+        await self.repository.reorder(ordered_ids)
+
     async def delete(self, skill_id: int) -> None:
         deleted = await self.repository.delete(skill_id)
         if not deleted:

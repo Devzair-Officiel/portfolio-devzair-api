@@ -33,6 +33,18 @@ async def create_skill(
     return await service.create(data)
 
 
+@router.put(
+    "/reorder",
+    status_code=status.HTTP_204_NO_CONTENT,
+    dependencies=[Depends(get_current_user)],
+)
+async def reorder_skills(
+    ordered_ids: list[int],
+    service: SkillService = Depends(get_skill_service),
+) -> None:
+    await service.reorder(ordered_ids)
+
+
 @router.delete(
     "/{skill_id}",
     status_code=status.HTTP_204_NO_CONTENT,
