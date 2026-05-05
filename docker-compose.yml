@@ -10,6 +10,7 @@ services:
       - ./src:/app/src
       - ./tests:/app/tests
       - ./alembic.ini:/app/alembic.ini
+      - uploads_data:/app/uploads
     env_file:
       - .env                   # Variables d'environnement depuis le fichier .env
     depends_on:
@@ -56,6 +57,7 @@ services:
 # Volumes nommés : Docker gère le stockage (données persistent entre `docker compose down`)
 volumes:
   postgres_data:
+  uploads_data:
 
 # Réseau interne : les conteneurs se parlent par leur nom de service (ex: "db")
 networks:

@@ -9,6 +9,8 @@ from app.models.project import Project  # noqa: F401
 from app.models.setting import Setting  # noqa: F401
 from app.models.skill import Skill  # noqa: F401
 from app.models.category import Category  # noqa: F401
+from app.models.experience import Experience  # noqa: F401
+from app.models.user import User  # noqa: F401
 
 config = context.config
 
