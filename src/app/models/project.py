@@ -14,6 +14,7 @@ class Project(Base, TimestampMixin):
     stack: Mapped[list[str]] = mapped_column(JSON, nullable=False, default=list)
     github_url: Mapped[str | None] = mapped_column(String(500), nullable=True)
     live_url: Mapped[str | None] = mapped_column(String(500), nullable=True)
+    image_url: Mapped[str | None] = mapped_column(String(500), nullable=True)
     is_active: Mapped[bool] = mapped_column(nullable=False, default=True)
 
     def __repr__(self) -> str:

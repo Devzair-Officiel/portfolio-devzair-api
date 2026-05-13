@@ -13,7 +13,7 @@ class SkillService:
         return [SkillResponse.model_validate(s) for s in skills]
 
     async def create(self, data: SkillCreate) -> SkillResponse:
-        skill = await self.repository.create(data.name, data.category)
+        skill = await self.repository.create(data.name, data.category, data.icon, data.color)
         return SkillResponse.model_validate(skill)
 
     async def reorder(self, ordered_ids: list[int]) -> None:

@@ -11,6 +11,8 @@ class Skill(Base, TimestampMixin):
     name: Mapped[str] = mapped_column(String(100), nullable=False)
     category: Mapped[str] = mapped_column(String(50), nullable=False)
     order: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    icon: Mapped[str | None] = mapped_column(String(50), nullable=True, default=None)
+    color: Mapped[str | None] = mapped_column(String(20), nullable=True, default=None)
 
     def __repr__(self) -> str:
         return f"<Skill {self.name!r} category={self.category!r}>"

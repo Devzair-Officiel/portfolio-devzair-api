@@ -6,6 +6,8 @@ class SkillResponse(BaseModel):
     name: str
     category: str
     order: int
+    icon: str | None = None
+    color: str | None = None
 
     model_config = {"from_attributes": True}
 
@@ -13,3 +15,5 @@ class SkillResponse(BaseModel):
 class SkillCreate(BaseModel):
     name: str
     category: str
+    icon: str | None = None
+    color: str | None = None

@@ -9,6 +9,7 @@ class ProjectBase(BaseModel):
     stack: list[str]
     github_url: str | None = None
     live_url: str | None = None
+    image_url: str | None = None
     is_active: bool = True
 
 
@@ -22,6 +23,7 @@ class ProjectUpdate(BaseModel):
     stack: list[str] | None = None
     github_url: str | None = None
     live_url: str | None = None
+    image_url: str | None = None
     is_active: bool | None = None
 
 

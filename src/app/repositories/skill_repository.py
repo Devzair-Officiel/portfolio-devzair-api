@@ -12,13 +12,13 @@ class SkillRepository:
         result = await self.session.execute(select(Skill).order_by(Skill.category, Skill.order, Skill.id))
         return list(result.scalars().all())
 
-    async def create(self, name: str, category: str) -> Skill:
+    async def create(self, name: str, category: str, icon: str | None = None, color: str | None = None) -> Skill:
         result = await self.session.execute(
             select(Skill).where(Skill.category == category).order_by(Skill.order.desc())
         )
         last = result.scalars().first()
         order = (last.order + 1) if last else 0
-        skill = Skill(name=name, category=category, order=order)
+        skill = Skill(name=name, category=category, order=order, icon=icon, color=color)
         self.session.add(skill)
         await self.session.commit()
         await self.session.refresh(skill)

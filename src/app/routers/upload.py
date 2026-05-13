@@ -14,6 +14,26 @@ ALLOWED_TYPES = {"image/png", "image/jpeg", "image/webp", "image/gif", "image/sv
 MAX_SIZE = 2 * 1024 * 1024  # 2 MB
 
 
+@router.post("/image", dependencies=[Depends(get_current_user)])
+async def upload_image(
+    file: UploadFile = File(...),
+) -> dict[str, str]:
+    if file.content_type not in ALLOWED_TYPES:
+        raise HTTPException(status_code=400, detail="Format non supporté. PNG, JPEG, WEBP ou SVG uniquement.")
+
+    contents = await file.read()
+    if len(contents) > MAX_SIZE:
+        raise HTTPException(status_code=400, detail="Fichier trop volumineux (max 2 Mo).")
+
+    UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
+    ext = Path(file.filename or "image.jpg").suffix or ".jpg"
+    filename = f"project_{uuid.uuid4().hex[:12]}{ext}"
+    dest = UPLOAD_DIR / filename
+    dest.write_bytes(contents)
+
+    return {"url": f"/uploads/{filename}"}
+
+
 @router.post("/logo", dependencies=[Depends(get_current_user)])
 async def upload_logo(
     file: UploadFile = File(...),
