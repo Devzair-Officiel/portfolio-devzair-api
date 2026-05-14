@@ -1,7 +1,20 @@
+from pathlib import Path
+
 from fastapi import HTTPException, status
 
 from app.repositories.project_repository import ProjectRepository
 from app.schemas.project import ProjectCreate, ProjectResponse, ProjectUpdate
+
+UPLOAD_DIR = Path("/app/uploads")
+
+
+def _delete_upload(image_url: str | None) -> None:
+    if not image_url:
+        return
+    filename = Path(image_url).name
+    filepath = UPLOAD_DIR / filename
+    if filepath.exists() and filepath.is_file():
+        filepath.unlink()
 
 
 class ProjectService:
@@ -32,7 +45,11 @@ class ProjectService:
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail=f"Projet {project_id} introuvable",
             )
+        old_image = project.image_url
         updated = await self.repository.update(project, data)
+        # Si l'image a changé, supprimer l'ancienne du disque
+        if data.image_url is not None and old_image != data.image_url:
+            _delete_upload(old_image)
         return ProjectResponse.model_validate(updated)
 
     async def reorder_projects(self, ordered_ids: list[int]) -> None:
@@ -45,4 +62,6 @@ class ProjectService:
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail=f"Projet {project_id} introuvable",
             )
+        image_url = project.image_url
         await self.repository.delete(project)
+        _delete_upload(image_url)
