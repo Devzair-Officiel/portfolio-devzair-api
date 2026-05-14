@@ -59,6 +59,38 @@ async def upload_image(
     return {"url": f"/uploads/{filename}"}
 
 
+@router.post("/cv", dependencies=[Depends(get_current_user)])
+async def upload_cv(
+    lang: str,
+    file: UploadFile = File(...),
+    db: AsyncSession = Depends(get_db),
+) -> dict[str, str]:
+    if lang not in ("fr", "en"):
+        raise HTTPException(status_code=400, detail="lang doit être 'fr' ou 'en'.")
+    if file.content_type != "application/pdf":
+        raise HTTPException(status_code=400, detail="Seuls les fichiers PDF sont acceptés.")
+
+    contents = await file.read()
+    if len(contents) > 20 * 1024 * 1024:
+        raise HTTPException(status_code=400, detail="Fichier trop volumineux (max 20 Mo).")
+
+    UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
+    filename = f"cv_{lang}.pdf"
+    filepath = UPLOAD_DIR / filename
+
+    # Supprime l'ancien fichier s'il existe
+    if filepath.exists():
+        filepath.unlink()
+
+    filepath.write_bytes(contents)
+    url = f"/uploads/{filename}"
+
+    repo = SettingRepository(session=db)
+    await repo.upsert(f"cv_{lang}_url", url)
+
+    return {"url": url}
+
+
 @router.post("/logo", dependencies=[Depends(get_current_user)])
 async def upload_logo(
     file: UploadFile = File(...),
