@@ -16,6 +16,7 @@ class Project(Base, TimestampMixin):
     live_url: Mapped[str | None] = mapped_column(String(500), nullable=True)
     image_url: Mapped[str | None] = mapped_column(String(500), nullable=True)
     is_active: Mapped[bool] = mapped_column(nullable=False, default=True)
+    order: Mapped[int] = mapped_column(nullable=False, default=0)
 
     def __repr__(self) -> str:
         return f"<Project id={self.id} title={self.title!r}>"

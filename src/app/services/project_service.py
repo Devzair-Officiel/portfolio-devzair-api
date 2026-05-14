@@ -35,6 +35,9 @@ class ProjectService:
         updated = await self.repository.update(project, data)
         return ProjectResponse.model_validate(updated)
 
+    async def reorder_projects(self, ordered_ids: list[int]) -> None:
+        await self.repository.reorder(ordered_ids)
+
     async def delete_project(self, project_id: int) -> None:
         project = await self.repository.get_by_id(project_id)
         if not project:

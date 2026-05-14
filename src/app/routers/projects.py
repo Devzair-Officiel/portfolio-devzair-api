@@ -55,6 +55,18 @@ async def update_project(
     return await service.update_project(project_id, data)
 
 
+@router.put(
+    "/reorder",
+    status_code=status.HTTP_204_NO_CONTENT,
+    dependencies=[Depends(get_current_user)],
+)
+async def reorder_projects(
+    ordered_ids: list[int],
+    service: ProjectService = Depends(get_project_service),
+) -> None:
+    await service.reorder_projects(ordered_ids)
+
+
 @router.delete(
     "/{project_id}",
     status_code=status.HTTP_204_NO_CONTENT,

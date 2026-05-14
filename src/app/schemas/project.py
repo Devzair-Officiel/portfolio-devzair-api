@@ -11,6 +11,7 @@ class ProjectBase(BaseModel):
     live_url: str | None = None
     image_url: str | None = None
     is_active: bool = True
+    order: int = 0
 
 
 class ProjectCreate(ProjectBase):
@@ -25,6 +26,7 @@ class ProjectUpdate(BaseModel):
     live_url: str | None = None
     image_url: str | None = None
     is_active: bool | None = None
+    order: int | None = None
 
 
 class ProjectResponse(ProjectBase):
